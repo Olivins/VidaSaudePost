@@ -21,7 +21,7 @@ public class RetrofitService {
         return instancia.api;
     }
     private Retrofit criaRetrofit() {
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().setLenient().create();
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))

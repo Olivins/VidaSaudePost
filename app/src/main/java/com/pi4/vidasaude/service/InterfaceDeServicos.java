@@ -32,6 +32,6 @@ public interface InterfaceDeServicos {
     Call<List<Medico>> medicosById(@Query("id") String id); //recebe Query e converte em GET no endpoint
 
     @POST("/pacientes.php")
-    Call<Consulta> consulta(@Query("nome") String nome, @Query("telefone") String telefone, @Query("idMedico") String idMedico);
+    Call<Consulta> consulta(@Query("nome") String nome, @Query("telefone") String telefone, @Query("idMedico") int idMedico);
 
 }

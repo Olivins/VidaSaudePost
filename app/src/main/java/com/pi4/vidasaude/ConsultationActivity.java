@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.GridLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -52,7 +54,6 @@ public class ConsultationActivity extends AppCompatActivity implements AdapterVi
     }
 
     private void insereDadosMedico(String nome, String crm, String especialidade) {
-
         ((ProgressBar) findViewById(R.id.progressBar)).setVisibility(View.INVISIBLE);
         ((GridLayout) findViewById(R.id.dados_medico)).setVisibility(View.VISIBLE);
         ((TextView) findViewById(R.id.nomemedico)).setText(nome);
@@ -63,9 +64,23 @@ public class ConsultationActivity extends AppCompatActivity implements AdapterVi
 
     public void solicitarConsulta(View view) {
         Intent i = new Intent(this, FinalActivity.class);
-        nomePaciente = findViewById(R.id.nomePaciente).toString();
-        telefonePaciente = findViewById(R.id.telefonePaciente).toString();
-        RetrofitService.getServico().consulta(nomePaciente, telefonePaciente, idMedico);
+        nomePaciente = ((TextView)findViewById(R.id.nomePaciente)).getText().toString();
+        telefonePaciente = ((TextView)findViewById(R.id.telefonePaciente)).getText().toString();
+        Call<Consulta> consulta = RetrofitService.getServico().consulta(nomePaciente, telefonePaciente, Integer.parseInt(idMedico));
+        consulta.enqueue(new Callback<Consulta>() {
+            @Override
+            public void onResponse(Call<Consulta> call, Response<Consulta> response) {
+
+                Toast.makeText(ConsultationActivity.this, "Consulta marcada.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Consulta> call, Throwable t) {
+                Log.i("teste",t.getMessage());
+                Log.i("teste",call.request().url().toString());
+                Toast.makeText(ConsultationActivity.this, "Erro na marcação da consulta.", Toast.LENGTH_SHORT).show();
+            }
+        });
         startActivity(i);
     }
 
